@@ -33,11 +33,9 @@ var app = (function () {
         var socket = new SockJS('/stompendpoint');
         stompClient = Stomp.over(socket);
 
-        // Conectarse al broker y suscribirse al tópico
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
 
-            // Suscribirse al tópico correcto
             stompClient.subscribe('/topic/newpoint', function (eventBody) {
                 var point = JSON.parse(eventBody.body);
                 alert("Nuevo punto recibido: X=" + point.x + " Y=" + point.y);
@@ -50,7 +48,13 @@ var app = (function () {
 
         init: function () {
             console.info("Initializing application...");
-            connectAndSubscribe(); // Conectar al cargar
+            connectAndSubscribe();
+
+            var canvas = document.getElementById("canvas");
+            canvas.addEventListener("click", function (evt) {
+                var pos = getMousePosition(evt);
+                app.publishPoint(pos.x, pos.y);
+            });
         },
 
         publishPoint: function (px, py) {
