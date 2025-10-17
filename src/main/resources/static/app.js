@@ -33,8 +33,9 @@ var app = (function () {
 
     // Conecta al endpoint y se suscribe al tópico dinámico
     var connectAndSubscribe = function () {
-        if (!drawingId) {
-            alert("Por favor ingrese un identificador de dibujo antes de conectarse.");
+        var dibujoId = $("#drawingId").val();
+        if (!dibujoId) {
+            alert("Por favor, ingrese un número de dibujo antes de conectarse.");
             return;
         }
 
@@ -45,16 +46,42 @@ var app = (function () {
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
 
-            // suscripción dinámica
-            let topic = `/topic/newpoint.${drawingId}`;
-            console.log("Subscrito a: " + topic);
-
-            stompClient.subscribe(topic, function (eventBody) {
+            // Suscripción a puntos
+            stompClient.subscribe('/topic/newpoint.' + dibujoId, function (eventBody) {
                 var point = JSON.parse(eventBody.body);
                 addPointToCanvas(point);
             });
+
+            // Suscripción a polígonos
+            stompClient.subscribe('/topic/newpolygon.' + dibujoId, function (eventBody) {
+                var points = JSON.parse(eventBody.body);
+                drawPolygon(points);
+            });
+
+            console.log("Suscrito a /topic/newpoint." + dibujoId + " y /topic/newpolygon." + dibujoId);
         });
     };
+
+    var drawPolygon = function (points) {
+        var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+
+        if (points.length < 3) return;
+
+        ctx.beginPath();
+        ctx.moveTo(points[0].x, points[0].y);
+        for (var i = 1; i < points.length; i++) {
+            ctx.lineTo(points[i].x, points[i].y);
+        }
+        ctx.closePath();
+        ctx.fillStyle = "rgba(0, 123, 255, 0.3)";
+        ctx.fill();
+        ctx.strokeStyle = "#007bff";
+        ctx.stroke();
+
+        console.log("Polígono dibujado con " + points.length + " puntos");
+    };
+
 
     return {
         init: function () {
@@ -76,19 +103,37 @@ var app = (function () {
                 }
                 connectAndSubscribe();
             });
+
+            document.getElementById("sendPointBtn").addEventListener("click", function () {
+                const x = parseInt(document.getElementById("x").value);
+                const y = parseInt(document.getElementById("y").value);
+
+                if (isNaN(x) || isNaN(y)) {
+                    alert("Debes ingresar valores numéricos para X e Y.");
+                    return;
+                }
+
+                app.publishPoint(x, y);
+            });
+
         },
 
         publishPoint: function (px, py) {
+            console.log("publishPoint() ejecutado con: ", px, py);
             var pt = new Point(px, py);
-            console.info("Publishing point at (" + pt.x + "," + pt.y + ")");
+            var dibujoId = $("#drawingId").val();
+            if (!dibujoId) {
+                alert("Debe ingresar el número del dibujo antes de enviar puntos.");
+                return;
+            }
 
+            console.info("Publishing point at (" + pt.x + "," + pt.y + ") to drawing " + dibujoId);
             addPointToCanvas(pt);
 
-            if (stompClient && stompClient.connected && drawingId) {
-                let topic = `/app/newpoint.${drawingId}`;
-                stompClient.send(topic, {}, JSON.stringify(pt));
+            if (stompClient) {
+                stompClient.send("/app/newpoint." + dibujoId, {}, JSON.stringify(pt));
             } else {
-                console.error("STOMP client not connected or drawingId missing.");
+                console.error("STOMP client not connected.");
             }
         },
 
@@ -97,7 +142,12 @@ var app = (function () {
                 stompClient.disconnect();
             }
             console.log("Disconnected");
+        },
+
+        connect: function () {
+            connectAndSubscribe();
         }
+
     };
 
 })();
