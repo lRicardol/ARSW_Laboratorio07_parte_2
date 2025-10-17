@@ -79,6 +79,18 @@ Ajuste la aplicación anterior para que pueda manejar más de un dibujo a la vez
 3. De la misma manera, haga que las publicaciones se realicen al tópico asociado al identificador ingresado por el usuario.
 4. Rectifique que se puedan realizar dos dibujos de forma independiente, cada uno de éstos entre dos o más clientes.
 
+## Prueba
+
+Desde Google Chrome y Microsoft Edge ingresamos con el ID = 25, y dibujamos en el canvas, lo cual debería mostrar el mismo dibujo en ambas pantallas
+
+![](img/ConexionDesdeGoogleChrome.png)
+
+![](img/ConexionDesdeMicrosoftEdge.png)
+
+Desde Microsoft Edge ingresamos con el ID = 80, no deberían aparecer esos puntos dibujados
+
+![](img/ConexionDesdeMicrosoftEdge2.png)
+
 	```bash
 	git commit -m "PARTE 3".
 	```
