@@ -2,7 +2,9 @@
 ### Arquitecturas de Software - ARSW
 ### Laboratorio - Broker de Mensajes STOMP con WebSockets + HTML5 Canvas.
 
-
+## Integrantes
+- Ricardo Andrés Ayala Garzón [lRicardol](https://github.com/lRicardol)
+- Santiago Amaya Zapata [SantiagoAmaya21](https://github.com/SantiagoAmaya21)
 
 - Conectarse con un botón
 - publicar con eventos de mouse
@@ -79,6 +81,18 @@ Ajuste la aplicación anterior para que pueda manejar más de un dibujo a la vez
 3. De la misma manera, haga que las publicaciones se realicen al tópico asociado al identificador ingresado por el usuario.
 4. Rectifique que se puedan realizar dos dibujos de forma independiente, cada uno de éstos entre dos o más clientes.
 
+## Prueba
+
+Desde Google Chrome y Microsoft Edge ingresamos con el ID = 25, y dibujamos en el canvas, lo cual debería mostrar el mismo dibujo en ambas pantallas
+
+![](img/ConexionDesdeGoogleChrome.png)
+
+![](img/ConexionDesdeMicrosoftEdge.png)
+
+Desde Microsoft Edge ingresamos con el ID = 80, no deberían aparecer esos puntos dibujados
+
+![](img/ConexionDesdeMicrosoftEdge2.png)
+
 	```bash
 	git commit -m "PARTE 3".
 	```
@@ -126,6 +140,11 @@ Para ver cómo manejar esto desde el manejador de eventos STOMP del servidor, re
 	
 	
 5. A partir de los diagramas dados en el archivo ASTAH incluido, haga un nuevo diagrama de actividades correspondiente a lo realizado hasta este punto, teniendo en cuenta el detalle de que ahora se tendrán tópicos dinámicos para manejar diferentes dibujos simultáneamente.
+
+Hicimos el siguiente diagrama usando Mermaid Live Editor
+
+![](img/Diagrama1.png)
+![](img/Diagrama2.png)
 
 5. Haga commit de lo realizado.
 
