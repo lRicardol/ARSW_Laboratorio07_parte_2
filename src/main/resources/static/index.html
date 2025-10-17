@@ -15,24 +15,48 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
-<html>
+<html lang="en">
     <head>
-        <title>TODO supply a title</title>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Collaborative Drawing</title>
+
+        <link rel="stylesheet" href="styles.css" />
+    </head>
+
+    <body>
+        <h1>Collaborative Drawing</h1>
+
+        <div>
+            Drawing ID:
+            <input id="drawingId" type="number" placeholder="Ingrese el ID del dibujo" />
+            <button id="connectBtn">Conectarse</button>
+        </div>
+
+        <br />
+
+        <div>
+            X: <input id="x" type="number" placeholder="x" />
+            Y: <input id="y" type="number" placeholder="y" />
+            <button id="sendPointBtn">Send point</button>
+        </div>
+
+        <br />
+
+        <canvas id="canvas" width="800" height="600" style="border: 2px solid #007bff"></canvas>
+
         <script src="/webjars/jquery/jquery.min.js"></script>
         <script src="/webjars/sockjs-client/sockjs.min.js"></script>
         <script src="/webjars/stomp-websocket/stomp.min.js"></script>
         <script src="/app.js"></script>
 
-    </head>
-
-
-    
-    <body onload="app.init()">
-        X:<input id="x" type="number"/>
-        Y:<input id="y" type="number"/>        
-        <button onclick="app.publishPoint($('#x').val(),$('#y').val())">Send point</button>
-        <canvas id="canvas" width="800" height="600"></canvas>
+        <script>
+            window.onload = function() {
+              app.init();
+            };
+        </script>
     </body>
 </html>
+
+
+
